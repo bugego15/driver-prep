@@ -71,7 +71,11 @@ driver-prep/
 │   ├── deploy.sh         # 把 .ko 传到 guest 的 ~/driver-prep-mods
 │   ├── smoke-test.sh     # 全自动验收
 │   └── guest-setup.sh    # 可选：在 guest 内装编译环境（GUEST_BUILD=1 时才用）
-└── docs/concepts-checklist.md   # 每周自测题 + 面试题清单
+├── docs/
+│   ├── concepts-checklist.md    # 每周自测题 + 面试题清单
+│   ├── pcie-resources.md        # PCIe 学习资源索引
+│   └── skill-map.md             # 个人技能树：L0~L6 细化 + 优先级 + 12 周路线 + 进度追踪
+└── pcie-materials/              # 本地学习资料（PDF/内核源码/观察记录，不进 Git）
 ```
 
 | 周 | 你要做的事 | 验收标准 | 对应岗位技能 |
@@ -191,6 +195,13 @@ GUEST_BUILD=1 bash scripts/start-vm.sh
 - 仓库内资源索引：[docs/pcie-resources.md](docs/pcie-resources.md)（免费官方规范、Bootlin 培训、LDD3 章节、内核文档链接）
 - 本地离线资料：`pcie-materials/`（含 Bootlin Linux PCI 驱动培训 PDF、LDD3 的 PCI/DMA 章节、内核文档快照、`drivers/pci/` 核心源码）
 - 推荐顺序：第 1 周看体系结构（配置空间/BAR/枚举）→ 第 2 周中断/DMA/AER → 第 3 周 SR-IOV/P2P/真实驱动
+
+---
+
+## 7.6 个人技能树与学习路线
+
+- **技能树总表**：[docs/skill-map.md](docs/skill-map.md)——L0~L6 每项细化到可验收子项，含优先级（P0~P3）、四级熟练度、12 周路线、面试自评表、简历项目映射、进度勾选表。
+- 投简历门槛：**P0 项到 C 档 + P1 项到 B 档**，不必等全部学完。
 
 ---
 
