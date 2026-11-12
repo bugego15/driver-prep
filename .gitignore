@@ -1,3 +1,6 @@
+# 本地 PCIe 学习资料（PDF / 内核源码快照，体积大且可复现，不进仓库）
+pcie-materials/
+
 # 内核模块编译产物（在 WSL 里 make 生成）
 *.o
 *.ko

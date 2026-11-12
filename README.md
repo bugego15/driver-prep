@@ -186,6 +186,14 @@ GUEST_BUILD=1 bash scripts/start-vm.sh
 
 ---
 
+## 7.5 PCIe 学习资料
+
+- 仓库内资源索引：[docs/pcie-resources.md](docs/pcie-resources.md)（免费官方规范、Bootlin 培训、LDD3 章节、内核文档链接）
+- 本地离线资料：`pcie-materials/`（含 Bootlin Linux PCI 驱动培训 PDF、LDD3 的 PCI/DMA 章节、内核文档快照、`drivers/pci/` 核心源码）
+- 推荐顺序：第 1 周看体系结构（配置空间/BAR/枚举）→ 第 2 周中断/DMA/AER → 第 3 周 SR-IOV/P2P/真实驱动
+
+---
+
 ## 8. 安全提示
 
 - 所有实验都在**虚拟机**里做，出问题只影响 `~/teco-vm/disk.qcow2`，删了重来即可。
