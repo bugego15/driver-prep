@@ -1,0 +1,10 @@
+# 内核模块编译产物（在 WSL 里 make 生成）
+*.o
+*.ko
+*.mod
+*.mod.c
+*.cmd
+.*.cmd
+modules.order
+Module.symvers
+.tmp_versions/
