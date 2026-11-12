@@ -35,7 +35,23 @@
 
 ### 0.3 自评节奏
 
-每周日：对着第 8 节的进度清单打勾 + 更新第 6 节的自评分。**只追 P0，别被 P2/P3 分散**。
+每周日：对着**第 13 节**的进度清单打勾 + 更新**第 10 节**的自评分。**只追 P0，别被 P2/P3 分散**。
+
+### 0.4 完整性对照：原始技能树 → 本文档
+
+本文档覆盖你贴出的 L0~L6 **全部条目**，共 **42 个可验收子项**，只是做了重新分组：
+
+| 原始层 | 本文档章节 | 子项数 | 覆盖说明 |
+|---|---|---|---|
+| L0 语言与系统基础 | 第 2 节 | 4 | C / 构建调试 / Linux 用户态 API / Shell+Python |
+| L1 Linux 内核 | 第 3 节 | 7 | 模块 / 字符设备与 UAPI / 内核内存 / 并发 / 中断 / 调试设施 / 其他 |
+| L2 硬件与总线 | 第 4 节 | 9 | PCIe / 资源 / 中断 / DMA / IOMMU / RAS / P2P / CPU 与内存序 / 链路系统 |
+| L3 加速器专属 | 第 5 节 | 8 | 驱动模型 / 设备内存 / 调度 / 固件 / 多进程 / 性能 / 多卡通信 / 负载 |
+| L4 虚拟化 | 第 6 节 | 5 | SR-IOV / VFIO / mdev / KVM / 算力切分 |
+| L5 调试验证 | 第 7 节 | 4 | 内核调试 / GDB 内部 / 硬件调试 / 测试验证 |
+| L6 工具链研发 | 第 8 节 | 5 | TecoGDB / TSight / SMI / TCVS / 编译器与构建 |
+
+> 说明：原始 L4 的"SR-IOV、VFIO、mdev、KVM、IOMMU group、直通"六点，合并为 5 个子项（IOMMU group 并入 VFIO 与隔离部分）；原始 L1 的"misc 设备"并入 L1.1。
 
 ---
 
@@ -156,6 +172,7 @@
 - 总线/设备/驱动模型：`bus_type`、`device`、`driver`、`probe/remove`
 - 匹配机制：`id_table`、`modalias`、`uevent`
 - 资源管理：`devm_*`、`class_create/device_create`
+- **misc 设备**（`misc_register`）——功能单一的设备首选，比完整 cdev 省事
 - 模块参数：`module_param`、`MODULE_PARM_DESC`
 
 **达标自测**
@@ -546,20 +563,53 @@
 
 ## 6. L4 虚拟化（优先级 **P2**，JD 加分）
 
+### L4.1 SR-IOV — 目标 B 档
+
 **内容清单**
-- SR-IOV：PF/VF、BAR、配置空间、VF 使能流程
-- VFIO：设备直通、IOMMU group、`vfio-pci`
-- mdev：软件切分（mediated device）
-- KVM 基本流程、virtio（对比）
-- 算力切分/多租户隔离
+- PF/VF 概念、VF 使能流程（`sriov_numvfs`）
+- VF 的 BAR/配置空间/资源分配
+- VF 与 PF 的关系、FLR 对 VF 的影响
 
 **达标自测**
-1. 解释 SR-IOV 一个 PF 怎么虚拟出多个 VF；
-2. VF 之间怎么隔离（IOMMU、BAR、中断）；
-3. 直通设备和 virtio 的性能/兼容性取舍。
+1. 一张物理卡怎么虚拟出多个 VF？VF 对主机看起来像什么？
+2. VF 的 BAR 和 PF 是独立还是共享？
+3. 写 `sriov_numvfs` 时内核做了什么？
 
-**资源**：`Documentation/PCI/pci-iov-howto.rst`、`drivers/pci/iov.c`、`drivers/vfio/`
-**练习**：读 iov.c + 用 `lspci` 观察支持 SR-IOV 的网卡（工控机 I210 支持）。
+**资源**：`Documentation/PCI/pci-iov-howto.rst`、`drivers/pci/iov.c`
+
+### L4.2 VFIO 与设备直通 — 目标 B 档
+
+- VFIO 框架：`vfio-pci`、`vfio-group`、container
+- **IOMMU group** 的概念与分组规则
+- 直通设备给虚拟机（QEMU `-device vfio-pci`）
+
+**达标自测**：解释为什么 VFIO 依赖 IOMMU group；把一个 PCI 设备直通给 VM 的步骤。
+
+**资源**：`drivers/vfio/`、`Documentation/driver-api/vfio.rst`
+
+### L4.3 mdev（软件切分）— 目标 A 档
+
+- mediated device 框架、厂商实现（如 vGPU）
+- 与 SR-IOV 的取舍
+
+**达标自测**：什么场景用 mdev 而不是 SR-IOV？
+
+### L4.4 KVM 基本流程 — 目标 A 档
+
+- KVM 的 VM/vCPU 概念、`/dev/kvm` ioctl
+- 与设备直通/virtio 的关系
+
+**达标自测**：一个 VM 启动时，设备和内存是怎么被 KVM 管理的？
+
+### L4.5 算力切分与多租户隔离 — 目标 B 档
+
+- 切分维度：内存、算力、带宽、中断
+- 配额/计量、隔离边界
+
+**达标自测**：给一张 AI 卡设计"切成 4 份"的方案，列出要实现哪些隔离。
+
+**资源汇总**：`drivers/pci/iov.c`、`drivers/vfio/`、`Documentation/PCI/pci-iov-howto.rst`
+**练习**：读 iov.c + 用 `lspci` 观察 SR-IOV 网卡（工控机 I210 支持）。
 
 ---
 
