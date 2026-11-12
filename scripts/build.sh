@@ -20,7 +20,7 @@ KEY="$VM_HOME/id_ed25519"
 KH_ROOT="$VM_HOME/kheaders"
 BASE="http://archive.ubuntu.com/ubuntu"
 DEFAULT_KVER="6.8.0-147-generic"
-WEEKS=(week1-hello week2-edu-probe week3-edu-irq week4-edu-dma)
+WEEKS=(week1-hello week2-edu-probe week3-edu-irq week4-edu-dma week5-chardev-uapi)
 
 log() { printf '[build] %s\n' "$*"; }
 

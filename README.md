@@ -64,12 +64,14 @@ driver-prep/
 ├── week2-edu-probe/      # PCI probe + BAR 映射 + MMIO 寄存器 + debugfs
 ├── week3-edu-irq/        # MSI/INTx 中断 + completion + 中断应答
 ├── week4-edu-dma/        # 一致性 DMA + 传输 + 数据校验
+├── week5-chardev-uapi/   # 【进阶】字符设备 + ioctl/mmap + 多进程（任务书 + 骨架 + 测试 App）
 ├── scripts/
 │   ├── start-vm.sh       # 起虚拟机（幂等，可反复执行）
 │   ├── stop-vm.sh        # 优雅关机
 │   ├── build.sh          # WSL 里编译模块（首次自动准备内核头文件 + gcc-13）
 │   ├── deploy.sh         # 把 .ko 传到 guest 的 ~/driver-prep-mods
-│   ├── smoke-test.sh     # 全自动验收
+│   ├── smoke-test.sh     # 全自动验收（week1~4）
+│   ├── test-week5.sh     # week5 端到端测试（编译/部署/加载/跑用户态 App）
 │   └── guest-setup.sh    # 可选：在 guest 内装编译环境（GUEST_BUILD=1 时才用）
 ├── docs/
 │   ├── concepts-checklist.md    # 每周自测题 + 面试题清单
@@ -84,6 +86,7 @@ driver-prep/
 | 2 | 读 `edu_probe.c`，改阶乘参数、加一个 debugfs 文件读 ID | `5! = 120`、`10! = 3628800`；能解释 BAR 是什么、为什么用 `ioread32` | PCI 驱动 / MMIO / debugfs |
 | 3 | 把轮询改成中断；用 `cat /proc/interrupts` 找你的 IRQ | 写 `8` 得到 `40320`，`/proc/interrupts` 中计数增长 | 中断处理 / 并发 |
 | 4 | 读懂 DMA 寄存器与往返校验；把 `EDU_DMA_LEN` 改成 4096 | `DMA 往返成功`；能解释 `dma_alloc_coherent` 与 `virt_to_phys` 的区别 | DMA / 内存管理 |
+| **5（进阶）** | 实现字符设备 `/dev/edu5`：ioctl、mmap、多进程共享 | `sudo ./test_edu5` 输出 `TEST PASSED`；两个进程同时跑不崩溃 | 字符设备 / UAPI / 多进程 |
 
 > 每周末尾的"改造任务"写在对应 `.c` 文件开头的注释里。**只看不写等于没学**。
 
@@ -125,6 +128,9 @@ tail -f ~/teco-vm/serial.log      # 串口日志（内核 panic 时看这里）
 bash scripts/build.sh                        # 全部
 bash scripts/build.sh week2-edu-probe        # 只编一个
 bash scripts/deploy.sh
+
+# week5 一键端到端测试（编译 module + 部署 + guest 内加载 + 跑 App）
+bash scripts/test-week5.sh
 
 # guest 内（ssh 之后）
 cd ~/driver-prep-mods

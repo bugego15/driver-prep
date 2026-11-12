@@ -7,7 +7,7 @@ PROJ_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VM_HOME="${VM_HOME:-$HOME/teco-vm}"
 SSH_PORT="${SSH_PORT:-2222}"
 KEY="$VM_HOME/id_ed25519"
-WEEKS=(week1-hello week2-edu-probe week3-edu-irq week4-edu-dma)
+WEEKS=(week1-hello week2-edu-probe week3-edu-irq week4-edu-dma week5-chardev-uapi)
 
 log() { printf '[deploy] %s\n' "$*"; }
 
